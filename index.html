@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Message Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#ff758c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SecureMsg">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+
+    <style>
+        :root {
+            --bg-color: #fff0f3;
+            --card-bg: #ffffff;
+            --primary-pink: #ff758c;
+            --secondary-pink: #ff7eb3;
+            --text-color: #555555;
+            --border-color: #ffb3c1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header-icon {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .header-icon .fa-heart {
+            background: white;
+            color: var(--primary-pink);
+            font-size: 28px;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.3);
+        }
+
+        .banner-top {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: #d81b60;
+            text-align: center;
+            padding: 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(255, 179, 193, 0.2);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4a4a4a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #666;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+            color: #333;
+            resize: vertical;
+        }
+
+        textarea:focus, input:focus {
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 5px rgba(255, 117, 140, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.8;
+        }
+
+        .btn-encrypt {
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.4);
+        }
+
+        .btn-decrypt {
+            background: linear-gradient(135deg, #b5179e, #7209b7);
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
+        }
+
+        .rev-toggle-btn {
+            background: none;
+            border: none;
+            color: #d1b3ff;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px;
+            border-radius: 6px;
+            transition: color 0.2s;
+        }
+
+        .rev-toggle-btn.active {
+            color: #7209b7;
+        }
+
+        .security-notice {
+            margin-top: 15px;
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: #777;
+            background: #faf4f6;
+            padding: 12px;
+            border-left: 3px solid var(--primary-pink);
+            border-radius: 8px;
+        }
+
+        .signature {
+            margin-top: 8px;
+            font-style: italic;
+            font-weight: 600;
+            color: #888;
+            text-align: right;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-icon">
+            <i class="fa-solid fa-heart"></i>
+        </div>
+
+        <div class="banner-top">
+            🌸 Kirim pesan buat orang tersayang, stay safe & i love u :) 🌸<br>
+            <span style="font-size: 11px; font-weight: 400;">Tulis ungkapan hatimu dengan aman & manis 💌</span>
+        </div>
+
+        <!-- Pembuat Kode -->
+        <div class="card">
+            <div class="card-title">
+                <span>💌 Curahkan Isi Hatimu</span>
+            </div>
+            
+            <div class="form-group">
+                <label>Isi Pesan Manis:</label>
+                <textarea id="plainMessage" rows="4" placeholder="Tulis isi hatimu di sini..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Kata Sandi Pengaman:</label>
+                <input type="text" id="secretKey" placeholder="Terserah Kamu">
+            </div>
+
+            <button class="btn btn-encrypt" onclick="encryptMessage()">
+                <i class="fa-solid fa-lock"></i> Kunci & Buat Kode
+            </button>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Silahkan Kirim kodenya:)</label>
+                <textarea id="cipherOutput" rows="3" readonly placeholder="-">-</textarea>
+            </div>
+        </div>
+
+        <!-- Pembaca Kode -->
+        <div class="card">
+            <div class="card-title">
+                <span>📖 Buka kode perasaannya:)</span>
+                <button type="button" id="revToggle" class="rev-toggle-btn" onclick="toggleReverse()">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label>Tempel Kode Pesan:</label>
+                <textarea id="cipherInput" rows="4" placeholder="Tempel kode yang dikirim di sini..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Kata Sandi Pengaman:</label>
+                <input type="text" id="decryptKey" placeholder="Masukkan kata sandi...">
+            </div>
+
+            <button class="btn btn-decrypt" onclick="decryptMessage()">
+                <i class="fa-solid fa-key"></i> Buka & Musnahkan
+            </button>
+
+            <div class="security-notice">
+                tak ada sistem yang benar-benar aman, usahakan menjaga dan membuat password yang kuat.<br><br>
+                Semua percakapan dan pesan asli akan terhapus setelah terbaca (Burn-After-Reading). Silahkan kirim kodenya via sosial media lain, untuk membuat lapisan keamanan, aplikasi ini hanya tool membuat dan membaca saja.
+                <div class="signature">Salam hangat Departemen Penyesatan R1 Spooks</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        let revActive = false;
+
+        function toggleReverse() {
+            revActive = !revActive;
+            document.getElementById('revToggle').classList.toggle('active', revActive);
+        }
+
+        async function deriveKey(pass, salt) {
+            const enc = new TextEncoder();
+            const keyMat = await window.crypto.subtle.importKey(
+                "raw",
+                enc.encode(pass),
+                { name: "PBKDF2" },
+                false,
+                ["deriveKey"]
+            );
+            return await window.crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: salt,
+                    iterations: 150000,
+                    hash: "SHA-256"
+                },
+                keyMat,
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptMessage() {
+            const msg = document.getElementById('plainMessage').value;
+            const pass = document.getElementById('secretKey').value;
+
+            if (!msg || !pass) {
+                alert("Mohon isi pesan dan kata sandi terlebih dahulu!");
+                return;
+            }
+
+            try {
+                const salt = window.crypto.getRandomValues(new Uint8Array(16));
+                const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                const key = await deriveKey(pass, salt);
+
+                const enc = new TextEncoder();
+                const encBuf = await window.crypto.subtle.encrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    enc.encode(msg)
+                );
+
+                const combined = new Uint8Array(salt.byteLength + iv.byteLength + encBuf.byteLength);
+                combined.set(salt, 0);
+                combined.set(iv, salt.byteLength);
+                combined.set(new Uint8Array(encBuf), salt.byteLength + iv.byteLength);
+
+                const b64 = btoa(String.fromCharCode.apply(null, combined));
+                document.getElementById('cipherOutput').value = b64;
+                document.getElementById('plainMessage').value = "";
+                document.getElementById('secretKey').value = "";
+            } catch (e) {
+                alert("Gagal memproses kode.");
+            }
+        }
+
+        async function decryptMessage() {
+            let inputCode = document.getElementById('cipherInput').value.trim();
+            let pass = document.getElementById('decryptKey').value;
+
+            if (!inputCode || !pass) {
+                alert("Mohon masukkan kode pesan dan kata sandi!");
+                return;
+            }
+
+            if (revActive) {
+                pass = pass.split('').reverse().join('');
+            }
+
+            try {
+                const bin = Uint8Array.from(atob(inputCode), c => c.charCodeAt(0));
+                
+                if (bin.length < 29) {
+                    throw new Error("Format tidak valid.");
+                }
+
+                const salt = bin.slice(0, 16);
+                const iv = bin.slice(16, 28);
+                const data = bin.slice(28);
+
+                const key = await deriveKey(pass, salt);
+                const decBuf = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    data
+                );
+
+                const dec = new TextDecoder();
+                const originalText = dec.decode(decBuf);
+
+                document.getElementById('cipherInput').value = originalText;
+                document.getElementById('decryptKey').value = "";
+            } catch (e) {
+                document.getElementById('cipherInput').value = "PESAN TELAH HILANG, SEPERTI PERASAANNYA :(";
+            }
+        }
+    </script>
+</body>
+</html>
